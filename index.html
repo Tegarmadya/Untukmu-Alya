@@ -12,7 +12,7 @@
 <body>
 
 <audio id="bgMusic" loop>
-  <source src="assets/music.mp3" type="audio/mp3">
+  <source src="music.mp3" type="audio/mp3">
 </audio>
 
 <div class="bg-parallax"></div>
@@ -61,7 +61,7 @@
     <p class="sub-text">Kita selalu bersama selamanya 💖</p>
 </div>
 
-<img src="assets/chibi-smile.png" id="chibiCharacter" class="chibi-character">
+<img src="chibi-smile.png" id="chibiCharacter" class="chibi-character">
 
 <script>
 
@@ -148,7 +148,7 @@ function typeWriter() {
 
                 gameState = "question";
 
-                chibi.src = "assets/chibi-pleading.png";
+                chibi.src = "chibi-pleading.png";
                 showDialog("Jawab yang jujur ya… 🥺");
 
             }, 800);
@@ -184,7 +184,7 @@ function paranoidHandler(e){
 
     if (distanceX < 90 && distanceY < 60) {
 
-        chibi.src = "assets/chibi-angry.png";
+        chibi.src = "chibi-angry.png";
         showDialog("Eh jangan itu 😠");
 
         moveNoButtonCrazy();
@@ -216,7 +216,7 @@ document.addEventListener("mousemove", paranoidHandler);
 
 function handleNoLeave(){
     if(gameState === "question"){
-        chibi.src = "assets/chibi-pleading.png";
+        chibi.src = "chibi-pleading.png";
     }
 }
 
@@ -287,7 +287,7 @@ function createBigConfetti(){
 
 function createSakura(){
     const sakura = document.createElement("img");
-    sakura.src = "assets/sakura.png";
+    sakura.src = "sakura.png";
     sakura.classList.add("sakura");
     sakura.style.left = Math.random() * 100 + "vw";
     sakura.style.animationDuration = 6 + Math.random()*4 + "s";
@@ -297,4 +297,5 @@ function createSakura(){
 
 </script>
 </body>
+
 </html>
