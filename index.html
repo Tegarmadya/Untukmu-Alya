@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Untuk Kamu 💖</title>
+
+<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;500&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+<audio id="bgMusic" loop>
+  <source src="assets/music.mp3" type="audio/mp3">
+</audio>
+
+<div class="bg-parallax"></div>
+<div class="light-overlay"></div>
+<div class="sakura-container"></div>
+<div class="chibi-dialog" id="chibiDialog">Hai kamu… 💕</div>
+<div class="light-burst"></div>
+<div class="flash-screen" id="flashScreen"></div>
+
+
+<div class="wrapper">
+
+    <div class="envelope-wrapper" id="envelopeWrapper">
+        <div class="envelope">
+            <div class="envelope-flap"></div>
+            <div class="envelope-body"></div>
+            <div class="seal">💖</div>
+        </div>
+    </div>
+
+    <div class="letter" id="letter">
+
+        <div id="romanticPart">
+            <h1 class="title">Untuk Kamu 💖</h1>
+
+            <div class="text-box">
+                <p id="typedText"></p>
+                <span class="cursor"></span>
+            </div>
+        </div>
+
+        <div class="question hidden" id="question">
+            <h2>Kamu mau gak dengan ku lagi?</h2>
+            <div class="buttons">
+                <button id="yesBtn">Iya 💕</button>
+                <button id="noBtn">Tidak 😢</button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<div class="surprise" id="surprise">
+    <h1 class="big-text">HOREEE 🥰</h1>
+    <p class="sub-text">Kita selalu bersama selamanya 💖</p>
+</div>
+
+<img src="assets/chibi-smile.png" id="chibiCharacter" class="chibi-character">
+
+<script>
+
+const envelopeWrapper = document.getElementById("envelopeWrapper");
+const bgMusic = document.getElementById("bgMusic");
+const typedText = document.getElementById("typedText");
+const question = document.getElementById("question");
+const romanticPart = document.getElementById("romanticPart");
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const surprise = document.getElementById("surprise");
+const chibi = document.getElementById("chibiCharacter");
+const chibiDialog = document.getElementById("chibiDialog");
+const letterBox = document.querySelector(".letter");
+let sakuraSpeed = 600;
+let sakuraInterval = setInterval(createSakura, sakuraSpeed);
+
+
+let gameState = "intro"; 
+
+const text = "Sejak kamu hadir, dunia terasa lebih hangat. Mungkin kurang pantas tapi. Bersama mu walaupun dirimu tidak ada disini, itu sangat menabjukan apalagi kamu hadir";
+let index = 0;
+
+
+function showDialog(message, duration = 4000){
+
+    if(!chibiDialog) return;
+
+    chibiDialog.textContent = message;
+    chibiDialog.classList.add("show");
+
+    setTimeout(()=>{
+        chibiDialog.classList.remove("show");
+    }, duration);
+}
+
+
+envelopeWrapper.addEventListener("click", () => {
+
+    if(gameState !== "intro") return;
+
+    gameState = "typing";
+
+    envelopeWrapper.classList.add("open");
+
+    bgMusic.volume = 0.7;
+    bgMusic.play().catch(()=>{});
+
+    showDialog("Aku mau bilang sesuatu… 💕", 5000);
+
+    setTimeout(()=>{
+        envelopeWrapper.classList.add("fade-out");
+    },2500);
+
+    setTimeout(()=>{
+        envelopeWrapper.style.display="none";
+    },4200);
+
+    setTimeout(typeWriter, 2000);
+
+});
+
+
+function typeWriter() {
+
+    if (index < text.length) {
+        typedText.innerHTML = text.substring(0, index);
+        index++;
+        setTimeout(typeWriter, 110);
+    } else {
+
+        document.querySelector(".cursor").style.display = "none";
+
+        setTimeout(() => {
+
+            romanticPart.style.transition = "0.8s";
+            romanticPart.style.opacity = "0";
+            romanticPart.style.transform = "translateY(-20px)";
+
+            setTimeout(() => {
+
+                romanticPart.style.display = "none";
+                question.classList.remove("hidden");
+
+                gameState = "question";
+
+                chibi.src = "assets/chibi-pleading.png";
+                showDialog("Jawab yang jujur ya… 🥺");
+
+            }, 800);
+
+        }, 3000);
+    }
+}
+
+function moveNoButtonCrazy() {
+
+    const rect = letterBox.getBoundingClientRect();
+    const padding = 30;
+
+    const maxX = rect.width - noBtn.offsetWidth - padding;
+    const maxY = rect.height - noBtn.offsetHeight - padding;
+
+    const randomX = Math.random() * maxX;
+    const randomY = Math.random() * maxY;
+
+    noBtn.style.position = "absolute";
+    noBtn.style.left = randomX + "px";
+    noBtn.style.top = randomY + "px";
+}
+
+function paranoidHandler(e){
+
+    if(gameState !== "question") return;
+
+    const btnRect = noBtn.getBoundingClientRect();
+
+    const distanceX = Math.abs(e.clientX - (btnRect.left + btnRect.width/2));
+    const distanceY = Math.abs(e.clientY - (btnRect.top + btnRect.height/2));
+
+    if (distanceX < 90 && distanceY < 60) {
+
+        chibi.src = "assets/chibi-angry.png";
+        showDialog("Eh jangan itu 😠");
+
+        moveNoButtonCrazy();
+    }
+}
+
+function heartBurst(){
+
+    for(let i=0;i<60;i++){
+
+        const heart = document.createElement("div");
+        heart.className = "sparkle";
+        heart.style.left = "50vw";
+        heart.style.top = "50vh";
+        heart.style.background = ["#ff4da6","#ff85c2","#fff"][Math.floor(Math.random()*3)];
+        heart.style.animationDuration = (1 + Math.random()) + "s";
+
+        document.body.appendChild(heart);
+
+        setTimeout(()=>heart.remove(),1500);
+    }
+}
+chibi.classList.add("chibi-bounce");
+setTimeout(()=>{
+   chibi.classList.remove("chibi-bounce");
+},600);
+
+document.addEventListener("mousemove", paranoidHandler);
+
+function handleNoLeave(){
+    if(gameState === "question"){
+        chibi.src = "assets/chibi-pleading.png";
+    }
+}
+
+noBtn.addEventListener("mouseleave", handleNoLeave);
+
+yesBtn.addEventListener("click", ()=>{
+
+    if(gameState !== "question") return;
+
+    gameState = "answered";
+
+    document.removeEventListener("mousemove", paranoidHandler);
+    noBtn.removeEventListener("mouseleave", handleNoLeave);
+    noBtn.style.display = "none";
+
+    chibi.src = "assets/chibi-happy.png";
+    chibi.classList.add("chibi-final");
+
+    document.body.classList.add("ending-zoom");
+    document.body.classList.add("ending-glow");
+
+    const flash = document.getElementById("flashScreen");
+    flash.classList.add("active");
+
+    createBigConfetti();
+
+    heartBurst();
+
+    clearInterval(sakuraInterval);
+    sakuraInterval = setInterval(createSakura, 80);
+
+    chibi.classList.add("chibi-bounce");
+    setTimeout(()=>{
+        chibi.classList.remove("chibi-bounce");
+    },600);
+
+    setTimeout(()=>{
+        surprise.classList.add("active");
+    },400);
+});
+
+function floatingHearts(){
+    for(let i=0;i<20;i++){
+        const heart=document.createElement("div");
+        heart.className="float-heart";
+        heart.style.left=40 + Math.random()*20 + "%";
+        heart.style.bottom="0";
+        heart.style.animationDuration=(3+Math.random()*2)+"s";
+        document.querySelector(".surprise").appendChild(heart);
+        setTimeout(()=>heart.remove(),5000);
+    }
+}
+
+
+function createBigConfetti(){
+
+    for(let i=0;i<200;i++){
+        const conf = document.createElement("div");
+        conf.className = "confetti";
+        conf.style.left = Math.random()*100 + "vw";
+        conf.style.animationDuration = (2 + Math.random()*2) + "s";
+        conf.style.background = ["#ff4da6","#fff","#ff85c2","#ffd6ec"][Math.floor(Math.random()*4)];
+        document.body.appendChild(conf);
+
+        setTimeout(()=>conf.remove(),4000);
+    }
+}
+
+function createSakura(){
+    const sakura = document.createElement("img");
+    sakura.src = "assets/sakura.png";
+    sakura.classList.add("sakura");
+    sakura.style.left = Math.random() * 100 + "vw";
+    sakura.style.animationDuration = 6 + Math.random()*4 + "s";
+    document.querySelector(".sakura-container").appendChild(sakura);
+    setTimeout(() => sakura.remove(), 10000);
+}
+
+</script>
+</body>
+</html>
